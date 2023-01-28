@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    "bin/cli",
+    "bin/app/src-tauri",
+
+    "lib",
+]
+
+[workspace.dependencies]
+hemtt-pbo = { git = "https://github.com/brettmayson/hemtt" }
+rayon = "1.6.1"
+serde = { version = "1.0.152", features = ["derive"] }

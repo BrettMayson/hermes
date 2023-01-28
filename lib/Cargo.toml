@@ -1,0 +1,15 @@
+[package]
+name = "harmony"
+description = "Harmony - Model"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hemtt-pbo = { workspace = true }
+indexmap = { version = "1.9.2", features = ["serde"] }
+indicatif = { version = "0.17.3" }
+rayon = { workspace = true }
+ring = "0.16.20"
+rmp-serde = "1.1.1"
+serde = { workspace = true }
+toml = { version = "0.6.0" }
