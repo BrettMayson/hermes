@@ -23,6 +23,7 @@ pub struct Server {
     /// The pack used by the server.
     pack: String,
     #[serde(default = "default_battleye", rename(serialize = "b"), alias = "b")]
+    /// Battleye enabled
     battleye: bool,
 }
 
@@ -35,6 +36,7 @@ impl Server {
         port: u16,
         password: Password,
         pack: String,
+        battleye: bool,
     ) -> Self {
         Self {
             name,
@@ -42,6 +44,7 @@ impl Server {
             port,
             password,
             pack,
+            battleye,
         }
     }
 
