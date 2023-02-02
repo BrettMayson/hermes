@@ -23,5 +23,7 @@ fn main() {
 }
 
 pub fn data_dir() -> PathBuf {
-    dirs::data_local_dir().expect("No local data dir").join("harmony-arma")
+    dirs::data_local_dir()
+        .expect("No local data dir")
+        .join("harmony-arma")
 }

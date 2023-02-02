@@ -2,7 +2,7 @@ use std::sync::mpsc::{self, Receiver, Sender};
 
 use tauri::{App, Manager, Wry};
 
-use crate::{worker::Command, config::RootConfig};
+use crate::{config::RootConfig, worker::Command};
 
 pub fn setup(app: &mut App<Wry>) -> (Receiver<Command>, Sender<WebEvent>) {
     let (tx, rx) = mpsc::channel();

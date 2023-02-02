@@ -14,10 +14,7 @@ impl Config {
     #[must_use]
     /// Creates a new config.
     pub fn new(root: RootConfig, communities: HashMap<Uuid, Community>) -> Self {
-        Self {
-            root,
-            communities,
-        }
+        Self { root, communities }
     }
 
     #[must_use]
@@ -37,7 +34,10 @@ impl Config {
             (true, config)
         } else {
             let config = std::fs::read(&config_path).expect("Failed to read config file");
-            (false, rmp_serde::from_slice(&config).expect("Failed to deserialize config"))
+            (
+                false,
+                rmp_serde::from_slice(&config).expect("Failed to deserialize config"),
+            )
         }
     }
 
@@ -66,5 +66,7 @@ pub struct Community {
 }
 
 pub fn find_arma() -> Option<PathBuf> {
-    SteamDir::locate().and_then(|mut s| s.app(&107_410).map(std::borrow::ToOwned::to_owned)).map(|s| s.path)
+    SteamDir::locate()
+        .and_then(|mut s| s.app(&107_410).map(std::borrow::ToOwned::to_owned))
+        .map(|s| s.path)
 }
