@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { open } from '@tauri-apps/api/dialog'
 
-const greetMsg = ref("");
-const name = ref("");
-
-// setup props
 const props = defineProps<{
   label: string;
   placeholder: string;
@@ -15,7 +10,6 @@ const props = defineProps<{
 
 const emit = defineEmits(['update'])
 
-// setup browse dialog
 async function browse() {
   const selected = await open({
     directory: true,
