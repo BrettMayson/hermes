@@ -12,13 +12,13 @@ rust-version = "1.57"
 tauri-build = { version = "1.2.1", features = [] }
 
 [dependencies]
-serde_json = "1.0.91"
+dirs = "4.0.0"
+rmp-serde = { version = "1.1.1" }
 serde = { version = "1.0.152", features = ["derive"] }
+serde_json = "1.0.91"
+steamlocate = { git = "https://github.com/LovecraftianHorror/steamlocate-rs/", branch = "fully-switch-from-steamy-vdf" }
 tauri = { version = "1.2.4", features = ["dialog-message", "dialog-open", "shell-open"] }
 uuid = { version = "1.2.2", features = ["v4", "serde"] }
-rmp-serde = { version = "1.1.1" }
-dirs = "4.0.0"
-steamlocate = { git = "https://github.com/LovecraftianHorror/steamlocate-rs/", branch = "fully-switch-from-steamy-vdf" }
 
 [features]
 # by default Tauri runs in production mode

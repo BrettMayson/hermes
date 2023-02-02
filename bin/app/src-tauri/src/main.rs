@@ -3,6 +3,8 @@
     windows_subsystem = "windows"
 )]
 
+use std::path::PathBuf;
+
 mod broker;
 mod config;
 mod worker;
@@ -20,12 +22,6 @@ fn main() {
         .expect("error while running tauri application");
 }
 
-// pub fn config_dir() -> PathBuf {
-//     dirs::config_dir().unwrap().join("arma-harmony")
-// }
-
-// pub fn find_arma() -> PathBuf {
-//     let Some(arma3dir) = SteamDir::locate().and_then(|mut s| s.app(&107_410).map(std::borrow::ToOwned::to_owned)) else {
-//         return Err(Error::Arma3NotFound);
-//     };
-// }
+pub fn data_dir() -> PathBuf {
+    dirs::data_local_dir().expect("No local data dir").join("harmony-arma")
+}

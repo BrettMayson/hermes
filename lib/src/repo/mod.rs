@@ -137,7 +137,7 @@ impl Repository {
     pub fn from_blob(source: &[u8]) -> Result<Self, String> {
         let version = source[0];
         if version != 1 {
-            return Err(format!("Unsupported Version: {}", version));
+            return Err(format!("Unsupported Version: {version}"));
         }
         let read = BufReader::new(&source[33..]);
         Self::deserialize(&mut rmp_serde::Deserializer::new(read)).map_err(|e| e.to_string())
@@ -181,7 +181,7 @@ impl Mod {
     pub fn from_folder(name: &str) -> Result<Self, String> {
         let path = PathBuf::from(name);
         if !path.exists() {
-            return Err(format!("No mod folder `{}`", name));
+            return Err(format!("No mod folder `{name}`"));
         }
         let root = Layer::from_folder(path)?;
         Ok(Self {

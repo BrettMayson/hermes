@@ -1,6 +1,6 @@
 use std::sync::mpsc::{Receiver, Sender};
 
-use crate::broker::WebEvent;
+use crate::{broker::WebEvent, config::Config};
 
 pub fn run(rx: Receiver<Command>, tx: Sender<WebEvent>) {
     loop {
@@ -9,17 +9,11 @@ pub fn run(rx: Receiver<Command>, tx: Sender<WebEvent>) {
         };
         match ev {
             Command::Awake => {
-                tx.send(WebEvent::AskArma3Folder);
+                println!("AWAKE");
+                let (first_time, config) = Config::load();
+                tx.send(WebEvent::RootConfigLoad((first_time, config.root().to_owned()))).unwrap();
             }
             Command::Log(l) => println!("LOG {}", l),
-            Command::Arma3Folder(response) => match response {
-                Arma3FolderResponse::Ok(p) => {
-                    println!("Path: {}", p);
-                }
-                Arma3FolderResponse::Cancel => {
-                    println!("Cancelled");
-                }
-            },
         }
     }
 }
@@ -28,10 +22,4 @@ pub enum Command {
     /// The webview is alive
     Awake,
     Log(String),
-    Arma3Folder(Arma3FolderResponse),
-}
-
-pub enum Arma3FolderResponse {
-    Ok(String),
-    Cancel,
 }

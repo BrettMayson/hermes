@@ -2,7 +2,7 @@ use std::sync::mpsc::{self, Receiver, Sender};
 
 use tauri::{App, Manager, Wry};
 
-use crate::worker::{Arma3FolderResponse, Command};
+use crate::{worker::Command, config::RootConfig};
 
 pub fn setup(app: &mut App<Wry>) -> (Receiver<Command>, Sender<WebEvent>) {
     let (tx, rx) = mpsc::channel();
@@ -17,21 +17,9 @@ pub fn setup(app: &mut App<Wry>) -> (Receiver<Command>, Sender<WebEvent>) {
         }
     });
 
-    let txs = tx.clone();
+    let txs = tx;
     app.listen_global("global:awake", move |_event| {
         txs.send(Command::Awake);
-    });
-
-    // global:arma3folder
-    let txs = tx.clone();
-    app.listen_global("global:arma3folder:ok", move |event| {
-        txs.send(Command::Arma3Folder(Arma3FolderResponse::Ok(
-            event.payload().unwrap().to_string(),
-        )));
-    });
-    let txs = tx.clone();
-    app.listen_global("global:arma3folder:cancel", move |event| {
-        txs.send(Command::Arma3Folder(Arma3FolderResponse::Cancel));
     });
 
     let handle = app.handle();
@@ -40,10 +28,11 @@ pub fn setup(app: &mut App<Wry>) -> (Receiver<Command>, Sender<WebEvent>) {
                 break;
             };
         match req {
-            WebEvent::AskArma3Folder => {
-                println!("EMIT global:arma3folder");
-                handle.emit_all("global:arma3folder", "").unwrap()
+            WebEvent::RootConfigLoad(rc) => {
+                println!("EMIT global:RootConfigLoad");
+                handle.emit_all("global:RootConfigLoad", &rc).unwrap()
             }
+            WebEvent::RootConfigSave(_) => todo!(),
         }
     });
 
@@ -51,5 +40,6 @@ pub fn setup(app: &mut App<Wry>) -> (Receiver<Command>, Sender<WebEvent>) {
 }
 
 pub enum WebEvent {
-    AskArma3Folder,
+    RootConfigLoad((bool, RootConfig)),
+    RootConfigSave(Result<(), String>),
 }

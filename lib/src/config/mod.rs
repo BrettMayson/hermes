@@ -36,7 +36,7 @@ impl Config {
         for pack in self.pack.values() {
             for m in pack.mods() {
                 if m.to_lowercase() != *m {
-                    return Err(format!("Mod `{}` must be lowercase", m));
+                    return Err(format!("Mod `{m}` must be lowercase"));
                 }
             }
         }

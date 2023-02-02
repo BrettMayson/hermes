@@ -95,7 +95,7 @@ impl Layer {
         let mut files = Vec::new();
         for entry in entries {
             let Ok(entry) = entry else {
-                return Err(format!("Invalid entry: {:?}", entry));
+                return Err(format!("Invalid entry: {entry:?}"));
             };
             if entry
                 .file_type()
