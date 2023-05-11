@@ -8,7 +8,7 @@ pub fn cli() -> Command {
     Command::new("generate").about("Generate a Repo in the current directory")
 }
 
-pub fn execute(_matches: &ArgMatches) {
+pub async fn execute(_matches: &ArgMatches) {
     let path = PathBuf::from("harmony.toml");
     if !path.exists() {
         eprintln!("err: No `harmony.toml` in the current directory");
@@ -23,7 +23,7 @@ pub fn execute(_matches: &ArgMatches) {
     let _ = std::fs::remove_dir_all(".harmony");
     std::fs::create_dir(".harmony").unwrap();
 
-    let repo: Repository = config.try_into().unwrap();
+    let repo = Repository::from_config(config).unwrap();
     let mut out = std::fs::File::create("harmony.mpk").unwrap();
     out.write_all(&repo.to_blob()).unwrap();
     println!("`harmony.mpk` Created!")

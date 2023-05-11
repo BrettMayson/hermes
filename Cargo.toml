@@ -9,3 +9,4 @@ members = [
 hemtt-pbo = { git = "https://github.com/brettmayson/hemtt" }
 rayon = "1.7.0"
 serde = { version = "1.0.162", features = ["derive"] }
+tokio = { version = "1.28.1", features = ["full"] }

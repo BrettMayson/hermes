@@ -4,7 +4,6 @@ use indexmap::IndexMap;
 
 use super::{file::Part, File, Layer, Mod};
 
-/// How has a repo changed between updates
 #[derive(Debug, PartialEq, Eq)]
 /// How has a mod changed between updates
 pub enum ModDelta {
@@ -19,7 +18,7 @@ pub enum ModDelta {
 }
 
 impl ModDelta {
-    /// Compare two repos to find how they've changed
+    /// Compare two mods to find how they've changed
     pub fn new(old: &Mod, new: &Mod) -> Result<Self, String> {
         if old.hash() == new.hash() {
             Ok(Self::Unchanged)

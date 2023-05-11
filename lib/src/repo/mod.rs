@@ -13,18 +13,28 @@ mod password;
 mod server;
 mod unit;
 
-use std::{collections::HashMap, io::BufReader, path::PathBuf};
+use std::{
+    collections::{HashMap, HashSet},
+    io::BufReader,
+    path::PathBuf,
+    sync::RwLock,
+    time::SystemTime,
+};
 
 pub use delta::{FileDelta, ModDelta};
 pub use dlc::DLC;
 pub use file::File;
+use indicatif::{ProgressBar, ProgressStyle};
 pub use layer::Layer;
 pub use pack::Pack;
 pub use password::Password;
+use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use ring::digest::{Context, Digest, SHA256};
 use serde::{Deserialize, Serialize};
 pub use server::Server;
 pub use unit::Unit;
+
+use crate::config::Config;
 
 #[derive(Debug, Serialize, Deserialize)]
 /// A configuration file for a Harmony repository.
@@ -141,6 +151,86 @@ impl Repository {
         }
         let read = BufReader::new(&source[33..]);
         Self::deserialize(&mut rmp_serde::Deserializer::new(read)).map_err(|e| e.to_string())
+    }
+
+    /// Create a repo from a config
+    pub fn from_config(config: Config) -> Result<Self, String> {
+        let mut mods_to_scan = Vec::with_capacity(60);
+        for pack in config.packs() {
+            println!("Collecting Pack: {}", pack.name());
+            let mut pack_mods = Vec::new();
+            for m in pack.mods() {
+                if m == "*" {
+                    for entry in std::fs::read_dir(".").expect("Failed to list directory for *") {
+                        let entry = entry.unwrap();
+                        if entry.file_type().unwrap().is_dir() {
+                            let name = entry.file_name().into_string().unwrap();
+                            if name.starts_with('@') && !pack_mods.contains(&name) {
+                                pack_mods.push(name);
+                            }
+                        }
+                    }
+                } else if m.starts_with('-') {
+                    let name = m.trim_start_matches('-');
+                    if name.starts_with('@') {
+                        if let Some(idx) = pack_mods.iter().position(|i| i == name) {
+                            pack_mods.remove(idx);
+                        }
+                    }
+                } else {
+                    pack_mods.push(m.to_string());
+                }
+            }
+            for m in pack_mods {
+                if !mods_to_scan.contains(&m) {
+                    mods_to_scan.push(m.to_string());
+                }
+            }
+        }
+        let style =
+            ProgressStyle::with_template("{bar:40.cyan/blue} {pos:>7}/{len:7} {msg}").unwrap();
+        let pb = ProgressBar::new(mods_to_scan.len() as u64).with_style(style);
+        let mods = RwLock::new(Vec::new());
+        let active = RwLock::new(HashSet::new());
+        #[allow(clippy::significant_drop_tightening)]
+        // I believe this is a false positive, check later when this is out of the nursery
+        mods_to_scan.par_iter().for_each(|m| {
+            active.write().unwrap().insert(m);
+            pb.set_message(
+                (active
+                    .read()
+                    .unwrap()
+                    .iter()
+                    .map(|s| s.as_str())
+                    .collect::<Vec<_>>())
+                .join(","),
+            );
+            let obj = Mod::from_folder(m).unwrap();
+            mods.write().unwrap().push(obj);
+            active.write().unwrap().remove(m);
+            pb.set_message(
+                (active
+                    .read()
+                    .unwrap()
+                    .iter()
+                    .map(|s| s.as_str())
+                    .collect::<Vec<_>>())
+                .join(","),
+            );
+            pb.inc(1);
+        });
+        pb.finish();
+        let (unit, pack, server) = config.into_parts();
+        Ok(Self::new(
+            unit,
+            mods.into_inner().unwrap(),
+            pack,
+            server.into_values().collect::<Vec<_>>(),
+            SystemTime::now()
+                .duration_since(SystemTime::UNIX_EPOCH)
+                .unwrap()
+                .as_secs(),
+        ))
     }
 }
 

@@ -35,7 +35,8 @@ pub fn cli() -> Command {
     global
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let matches = cli().get_matches();
 
     rayon::ThreadPoolBuilder::new()
@@ -45,7 +46,7 @@ fn main() {
         .unwrap();
 
     match matches.subcommand() {
-        Some(("generate", matches)) => commands::generate::execute(matches),
+        Some(("generate", matches)) => commands::generate::execute(matches).await,
         _ => unreachable!(),
     }
 }
