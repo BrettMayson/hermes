@@ -16,10 +16,8 @@ async function browse() {
     title: props.label,
     defaultPath: props.value || "",
   });
-  if (selected)
-    emit('update', selected);
+  if (selected) emit('update', selected);
 };
-
 </script>
 
 <template>

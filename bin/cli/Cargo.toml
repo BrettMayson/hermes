@@ -10,5 +10,5 @@ path = "src/main.rs"
 [dependencies]
 harmony = { path = "../../lib" }
 
-clap = { version = "4.1.4", features = ["derive"] }
+clap = { version = "4.1.8", features = ["derive"] }
 rayon = { workspace = true }

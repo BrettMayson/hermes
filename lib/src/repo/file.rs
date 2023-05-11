@@ -154,7 +154,7 @@ impl File {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 /// A part of a PBO file.
 pub struct Part {
     /// The name of the part.

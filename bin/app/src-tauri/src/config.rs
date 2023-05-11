@@ -26,10 +26,7 @@ impl Config {
         if !config_path.exists() {
             let mut config = Self::default();
             if let Some(arma3) = find_arma() {
-                println!("Found Arma 3 at {:?}", arma3);
                 config.root.arma3folder = Some(arma3);
-            } else {
-                println!("Could not find Arma 3");
             }
             (true, config)
         } else {

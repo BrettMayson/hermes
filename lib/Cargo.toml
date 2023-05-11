@@ -6,10 +6,15 @@ edition = "2021"
 
 [dependencies]
 hemtt-pbo = { workspace = true }
-indexmap = { version = "1.9.2", features = ["serde"] }
+indexmap = { version = "1.9.3", features = ["serde"] }
 indicatif = { version = "0.17.3" }
 rayon = { workspace = true }
+reqwest = { version = "0.11.17" }
 ring = "0.16.20"
 rmp-serde = "1.1.1"
 serde = { workspace = true }
-toml = { version = "0.6.0" }
+tokio = { version = "1.28.1", features = ["full"] }
+toml = { version = "0.7.3" }
+
+[dev-dependencies]
+human_bytes = "0.4.2"

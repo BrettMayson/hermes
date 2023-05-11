@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
-use super::{Layer, Mod};
+use indexmap::IndexMap;
+
+use super::{file::Part, File, Layer, Mod};
 
 /// How has a repo changed between updates
 #[derive(Debug, PartialEq, Eq)]
@@ -38,7 +40,46 @@ fn check_layer(old: &Layer, new: &Layer) -> HashMap<String, FileDelta> {
     for file in old.files() {
         if let Some(nf) = new.files().iter().find(|nf| nf.name() == file.name()) {
             if nf.hash() != file.hash() {
-                changed.insert(file.name().to_string(), FileDelta::GenericChanged);
+                let File::Pbo{ name: _, size: _, props, parts: new_parts, hash: _ } = nf else {
+                    changed.insert(file.name().to_string(), FileDelta::GenericChanged);
+                    continue;
+                };
+                let File::Pbo{ name: _, size: _, props: _, parts: old_parts, hash: _ } = file else {
+                    changed.insert(file.name().to_string(), FileDelta::GenericChanged);
+                    continue;
+                };
+                let mut diff_changed = Vec::new();
+                let mut diff_added = Vec::new();
+                let mut diff_removed = Vec::new();
+                for part in old_parts {
+                    new_parts
+                        .iter()
+                        .find(|np| np.name() == part.name())
+                        .map_or_else(
+                            || {
+                                diff_removed.push(part.name().to_string());
+                            },
+                            |np| {
+                                if np.hash() != part.hash() {
+                                    diff_changed.push(part.to_owned());
+                                }
+                            },
+                        )
+                }
+                for part in new_parts {
+                    if !old_parts.iter().any(|op| op.name() == part.name()) {
+                        diff_added.push(part.to_owned());
+                    }
+                }
+                changed.insert(
+                    file.name().to_string(),
+                    FileDelta::PboChanged {
+                        props: props.clone(),
+                        changed: diff_changed,
+                        added: diff_added,
+                        removed: diff_removed,
+                    },
+                );
             }
         } else {
             changed.insert(file.name().to_string(), FileDelta::Deleted);
@@ -75,6 +116,15 @@ pub enum FileDelta {
     Deleted,
     /// A generic file has been changed
     GenericChanged,
-    // /// A PBO file has been changed
-    // PboChanged,
+    /// A PBO file has been changed
+    PboChanged {
+        /// The props in the new PBO file
+        props: IndexMap<String, String>,
+        /// The PBO file has been changed
+        changed: Vec<Part>,
+        /// The PBO file has been added
+        added: Vec<Part>,
+        /// The PBO file has been removed
+        removed: Vec<String>,
+    },
 }
