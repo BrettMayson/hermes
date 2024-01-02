@@ -39,11 +39,19 @@ fn check_layer(old: &Layer, new: &Layer) -> HashMap<String, FileDelta> {
     for file in old.files() {
         if let Some(nf) = new.files().iter().find(|nf| nf.name() == file.name()) {
             if nf.hash() != file.hash() {
-                let File::Pbo{ name: _, size: _, props, parts: new_parts, hash: _ } = nf else {
+                let File::Pbo {
+                    props,
+                    parts: new_parts,
+                    ..
+                } = nf
+                else {
                     changed.insert(file.name().to_string(), FileDelta::GenericChanged);
                     continue;
                 };
-                let File::Pbo{ name: _, size: _, props: _, parts: old_parts, hash: _ } = file else {
+                let File::Pbo {
+                    parts: old_parts, ..
+                } = file
+                else {
                     changed.insert(file.name().to_string(), FileDelta::GenericChanged);
                     continue;
                 };
