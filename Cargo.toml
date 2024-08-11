@@ -7,6 +7,6 @@ members = [
 
 [workspace.dependencies]
 hemtt-pbo = { git = "https://github.com/brettmayson/hemtt" }
-rayon = "1.8.0"
-serde = { version = "1.0.193", features = ["derive"] }
-tokio = { version = "1.35.1", features = ["full"] }
+rayon = "1.10.0"
+serde = { version = "1.0.205", features = ["derive"] }
+tokio = { version = "1.39.2", features = ["full"] }

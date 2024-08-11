@@ -1,7 +1,7 @@
 use std::{io::Write, path::PathBuf, str::FromStr};
 
 use clap::{ArgMatches, Command};
-use harmony::{config::Config, repo::Repository};
+use syncra::{config::Config, repo::Repository};
 
 #[must_use]
 pub fn cli() -> Command {
@@ -9,22 +9,22 @@ pub fn cli() -> Command {
 }
 
 pub async fn execute(_matches: &ArgMatches) {
-    let path = PathBuf::from("harmony.toml");
+    let path = PathBuf::from("syncra.toml");
     if !path.exists() {
-        eprintln!("err: No `harmony.toml` in the current directory");
+        eprintln!("err: No `syncra.toml` in the current directory");
         return;
     }
     let config =
-        Config::from_str(&std::fs::read_to_string(path).expect("Failed to read `harmony.yoml`"))
+        Config::from_str(&std::fs::read_to_string(path).expect("Failed to read `syncra.yoml`"))
             .unwrap();
     println!("Generating {}", config.unit().name());
 
-    // Cleanup .harmony
-    let _ = std::fs::remove_dir_all(".harmony");
-    std::fs::create_dir(".harmony").unwrap();
+    // Cleanup .syncra
+    let _ = std::fs::remove_dir_all(".syncra");
+    std::fs::create_dir(".syncra").unwrap();
 
     let repo = Repository::from_config(config).unwrap();
-    let mut out = std::fs::File::create("harmony.mpk").unwrap();
+    let mut out = std::fs::File::create("syncra.mpk").unwrap();
     out.write_all(&repo.to_blob()).unwrap();
-    println!("`harmony.mpk` Created!")
+    println!("`syncra.mpk` Created!")
 }

@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -23,6 +25,10 @@ pub enum DLC {
     /// Creator DLC: Western Sahara
     /// https://store.steampowered.com/app/1681170/Arma_3_Creator_DLC_Western_Sahara/
     WesternSahara,
+    #[serde(rename = "rf")]
+    /// Creator DLC: Reaction Forces
+    /// https://store.steampowered.com/app/2647760/Arma_3_Creator_DLC_Reaction_Forces/
+    ReactionForces,
 }
 
 impl DLC {
@@ -35,20 +41,21 @@ impl DLC {
             Self::PrairieFire => "vn",
             Self::IronCurtain => "csla",
             Self::WesternSahara => "ws",
+            Self::ReactionForces => "rf",
         }
     }
 }
 
-impl ToString for DLC {
-    fn to_string(&self) -> String {
+impl Display for DLC {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Contact => "Contact",
-            Self::GlobalMobilization => "Creator DLC: Global Mobilization - Cold War Germany",
-            Self::PrairieFire => "Creator DLC: S.O.G. Prairie Fire",
-            Self::IronCurtain => "Creator DLC: CSLA Iron Curtain",
-            Self::WesternSahara => "Creator DLC: Western Sahara",
+            Self::Contact => write!(f, "Contact"),
+            Self::GlobalMobilization => write!(f, "Global Mobilization"),
+            Self::PrairieFire => write!(f, "S.O.G. Prairie Fire"),
+            Self::IronCurtain => write!(f, "CSLA Iron Curtain"),
+            Self::WesternSahara => write!(f, "Western Sahara"),
+            Self::ReactionForces => write!(f, "Reaction Forces"),
         }
-        .to_string()
     }
 }
 
@@ -64,6 +71,7 @@ impl TryFrom<String> for DLC {
                 "sog" | "prairie fire" | "s.o.g. prairie fire" => Self::PrairieFire,
                 "csla" | "iron curtain" | "csla iron curtain" => Self::IronCurtain,
                 "ws" | "western sahara" => Self::WesternSahara,
+                "rf" | "reaction forces" => Self::ReactionForces,
                 _ => return Err(()),
             },
         )

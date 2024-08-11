@@ -1,20 +1,20 @@
 [package]
-name = "harmony"
-description = "Harmony - Model"
+name = "syncra"
+description = "Syncra - Model"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 hemtt-pbo = { workspace = true }
-indexmap = { version = "2.0.2", features = ["serde"] }
-indicatif = { version = "0.17.7" }
+indexmap = { version = "2.3.0", features = ["serde"] }
+indicatif = { version = "0.17.8" }
 rayon = { workspace = true }
-reqwest = { version = "0.11.22" }
-ring = "0.17.5"
-rmp-serde = "1.1.2"
+reqwest = { version = "0.12.5" }
+ring = "0.17.8"
+rmp-serde = "1.3.0"
 serde = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
-toml = { version = "0.8.6" }
+toml = { version = "0.8.19" }
 
 [dev-dependencies]
 human_bytes = "0.4.3"

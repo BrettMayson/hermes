@@ -1,16 +1,16 @@
 [package]
-name = "harmony-cli"
+name = "syncra-cli"
 version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "harmony"
+name = "syncra"
 path = "src/main.rs"
 
 [dependencies]
-harmony = { path = "../../lib" }
+syncra = { path = "../../lib" }
 tokio = { workspace = true, features = ["full"] }
 
-clap = { version = "4.4.7", features = ["derive"] }
+clap = { version = "4.5.15", features = ["derive"] }
 rayon = { workspace = true }
 tokio-rayon = "2.1.0"

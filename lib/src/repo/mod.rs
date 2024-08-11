@@ -1,8 +1,8 @@
 #![deny(clippy::all, clippy::nursery, missing_docs)]
 
-//! Harmony - Repository
+//! Syncra - Repository
 //!
-//! This library provides the repository format for Harmony.
+//! This library provides the repository format for Syncra.
 
 mod delta;
 mod dlc;
@@ -37,7 +37,7 @@ pub use unit::Unit;
 use crate::config::Config;
 
 #[derive(Debug, Serialize, Deserialize)]
-/// A configuration file for a Harmony repository.
+/// A configuration file for a Syncra repository.
 pub struct Repository {
     #[serde(rename = "v")]
     /// Version of the repository
