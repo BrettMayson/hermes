@@ -1,2 +1,4 @@
-[*.ts, *.vue]
+root=true
+
+[*.ts, *.tsx, *.json]
 indent_size = 2

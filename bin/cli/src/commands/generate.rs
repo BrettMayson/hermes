@@ -1,7 +1,7 @@
 use std::{io::Write, path::PathBuf, str::FromStr};
 
 use clap::{ArgMatches, Command};
-use syncra::{config::Config, repo::Repository};
+use hermes::{config::Config, repo::Repository};
 
 #[must_use]
 pub fn cli() -> Command {
@@ -9,22 +9,22 @@ pub fn cli() -> Command {
 }
 
 pub async fn execute(_matches: &ArgMatches) {
-    let path = PathBuf::from("syncra.toml");
+    let path = PathBuf::from("hermes.toml");
     if !path.exists() {
-        eprintln!("err: No `syncra.toml` in the current directory");
+        eprintln!("err: No `hermes.toml` in the current directory");
         return;
     }
     let config =
-        Config::from_str(&std::fs::read_to_string(path).expect("Failed to read `syncra.yoml`"))
+        Config::from_str(&std::fs::read_to_string(path).expect("Failed to read `hermes.yoml`"))
             .unwrap();
     println!("Generating {}", config.unit().name());
 
-    // Cleanup .syncra
-    let _ = std::fs::remove_dir_all(".syncra");
-    std::fs::create_dir(".syncra").unwrap();
+    // Cleanup .hermes
+    let _ = std::fs::remove_dir_all(".hermes");
+    std::fs::create_dir(".hermes").unwrap();
 
     let repo = Repository::from_config(config).unwrap();
-    let mut out = std::fs::File::create("syncra.mpk").unwrap();
+    let mut out = std::fs::File::create("hermes.mpk").unwrap();
     out.write_all(&repo.to_blob()).unwrap();
-    println!("`syncra.mpk` Created!")
+    println!("`hermes.mpk` Created!")
 }

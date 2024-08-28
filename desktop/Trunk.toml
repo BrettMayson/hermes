@@ -1,0 +1,16 @@
+[build]
+target = "./index.html"
+
+[watch]
+ignore = ["./src-tauri"]
+
+[serve]
+address = "0.0.0.0"
+port = 1420
+open = false
+ws_protocol = "ws"
+
+[[hooks]]
+stage = "pre_build"
+command = "npx"
+command_arguments = ["tailwindcss", "build", "-i", "style/tailwind.css", "-o", "style/output.css"]

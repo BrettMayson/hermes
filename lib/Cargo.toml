@@ -1,6 +1,6 @@
 [package]
-name = "syncra"
-description = "Syncra - Model"
+name = "hermes"
+description = "hermes - Model"
 version = "0.1.0"
 edition = "2021"
 

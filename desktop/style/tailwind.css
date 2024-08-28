@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.app-mainbackground {
+    background-image: url(https://i.imgur.com/WCZNMYI.png);
+    background-size: cover;
+}
+
+@media (prefers-color-scheme: dark) {
+    .app-mainbackground {
+        background-image: url(https://i.imgur.com/Wbwvp19.png);
+    }
+}
+
+html[data-theme='dark'] .app-mainbackground {
+    background-image: url(https://i.imgur.com/Wbwvp19.png);
+}

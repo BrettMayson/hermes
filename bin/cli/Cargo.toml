@@ -1,14 +1,14 @@
 [package]
-name = "syncra-cli"
+name = "hermes-cli"
 version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "syncra"
+name = "hermes"
 path = "src/main.rs"
 
 [dependencies]
-syncra = { path = "../../lib" }
+hermes = { path = "../../lib" }
 tokio = { workspace = true, features = ["full"] }
 
 clap = { version = "4.5.15", features = ["derive"] }
