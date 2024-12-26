@@ -5,8 +5,11 @@ use tauri::{Emitter, Window};
 // init a background process on the command, and emit periodic events only to the window that used the command
 #[tauri::command]
 fn init_process(window: Window) {
-    if window.title().unwrap() != "hermes" {
-        println!("ignoring init_process for window '{}'", window.title().unwrap());
+    if window.title().unwrap().to_lowercase() != "hermes" {
+        println!(
+            "ignoring init_process for window '{}'",
+            window.title().unwrap()
+        );
         return;
     }
     std::thread::spawn(move || {

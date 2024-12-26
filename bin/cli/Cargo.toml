@@ -11,6 +11,6 @@ path = "src/main.rs"
 hermes = { path = "../../lib" }
 tokio = { workspace = true, features = ["full"] }
 
-clap = { version = "4.5.15", features = ["derive"] }
+clap = { version = "4.5.23", features = ["derive"] }
 rayon = { workspace = true }
 tokio-rayon = "2.1.0"

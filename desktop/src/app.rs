@@ -1,12 +1,12 @@
 use std::path::PathBuf;
 
-use leptos::*;
-use serde::{Deserialize, Serialize};
 use hermes_desktop_comm::setup::{Platform, Setup};
+use leptos::{logging, prelude::*};
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
+use wasm_bindgen_futures::spawn_local;
 
 use crate::{invoke, listen, Event};
-
 
 #[derive(Serialize, Deserialize)]
 struct GreetArgs<'a> {
@@ -30,9 +30,9 @@ pub fn App() -> impl IntoView {
     //     });
     // };
 
-    let (connected, setConnected) = create_signal(false);
-    let (platform, setPlatform) = create_signal(None::<Platform>);
-    let (arma3dir, setArma3Dir) = create_signal(None::<PathBuf>);
+    let (connected, setConnected) = signal(false);
+    let (platform, setPlatform) = signal(None::<Platform>);
+    let (arma3dir, setArma3Dir) = signal(None::<PathBuf>);
 
     spawn_local(async move {
         let closure = Closure::<dyn FnMut(_)>::new(move |_: JsValue| {

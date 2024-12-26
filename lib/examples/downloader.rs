@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use indicatif::{MultiProgress, ProgressBar};
 use hermes::downloader::{DownloadKey, DownloadPool, Event, Update};
+use indicatif::{MultiProgress, ProgressBar};
 
 #[tokio::main]
 async fn main() {

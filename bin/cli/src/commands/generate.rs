@@ -15,7 +15,7 @@ pub async fn execute(_matches: &ArgMatches) {
         return;
     }
     let config =
-        Config::from_str(&std::fs::read_to_string(path).expect("Failed to read `hermes.yoml`"))
+        Config::from_str(&std::fs::read_to_string(path).expect("Failed to read `hermes.toml`"))
             .unwrap();
     println!("Generating {}", config.unit().name());
 

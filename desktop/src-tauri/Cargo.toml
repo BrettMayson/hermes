@@ -10,7 +10,7 @@ name = "hermes_lib"
 crate-type = ["lib", "cdylib", "staticlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-rc", features = [] }
+tauri-build = { version = "2.0.3", features = [] }
 
 [dependencies]
 hermes-desktop-comm = { path = "../src-comm" }
@@ -22,4 +22,5 @@ steamlocate = "2.0.0-beta.2"
 tauri = { version = "2.0.0-rc", features = [] }
 tauri-plugin-shell = "2.0.0-rc"
 
-dark-light = { path = "../../rust-dark-light" }
+# dark-light = "1.1.1"
+dark-light = { git = "https://github.com/frewsxcv/rust-dark-light" }

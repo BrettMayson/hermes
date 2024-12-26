@@ -1,13 +1,22 @@
 use futures::StreamExt;
-use steamlocate::SteamDir;
 use hermes_desktop_comm::setup::{Platform, Setup};
+use steamlocate::SteamDir;
 use tauri::{async_runtime::spawn, Emitter, Window};
 
 pub fn setup(window: Window) {
     let theme_window = window.clone();
     spawn(async move {
-        fn send (window: &Window, mode: dark_light::Mode) {
-            window.emit("theme", if mode == dark_light::Mode::Dark { "dark" } else { "light" }).unwrap();
+        fn send(window: &Window, mode: dark_light::Mode) {
+            window
+                .emit(
+                    "theme",
+                    if mode == dark_light::Mode::Dark {
+                        "dark"
+                    } else {
+                        "light"
+                    },
+                )
+                .unwrap();
         }
         let mode = dark_light::detect();
         send(&theme_window, mode);
@@ -15,7 +24,7 @@ pub fn setup(window: Window) {
             send(&theme_window, mode);
         }
     });
-    
+
     let setup = Setup {
         arma_3_location: arma_3_location(),
         platform: platform(),
@@ -38,7 +47,8 @@ fn platform() -> Platform {
             .arg("list")
             .arg("--app")
             .output()
-            .map(|o| String::from_utf8_lossy(&o.stdout).contains("com.valvesoftware.Steam")).unwrap_or_default();
+            .map(|o| String::from_utf8_lossy(&o.stdout).contains("com.valvesoftware.Steam"))
+            .unwrap_or_default();
         if flatpak {
             Platform::LinuxFlatpak
         } else {
